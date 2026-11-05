@@ -91,6 +91,8 @@ export async function ForgotPassword(req, res) {
       });
     }
 
+    
+
     const normalizedEmail = email.trim().toLowerCase();
 
     const user = await User.findOne({
@@ -115,10 +117,14 @@ export async function ForgotPassword(req, res) {
 
     // Vite frontend runs on port 5173 by default.
     const resetLink =
-      `http://localhost:5173/reset-password?token=${resetToken}`;
+      `${
+        process.env.NODE_ENV === "production"
+          ? process.env.CLIENT_URL
+          : "http://localhost:5173"
+      }/reset-password?token=${resetToken}`;
 
     const info = await transporter.sendMail({
-      from: '"MLocal Store" <test@example.com>',
+     from: `"MLocal Store" <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject: "Reset Your Password",
       text: `Use this link to reset your password. It expires in 10 minutes:\n${resetLink}`,
@@ -136,10 +142,10 @@ export async function ForgotPassword(req, res) {
       `,
     });
 
-    const previewUrl = nodemailer.getTestMessageUrl(info);
+    // const previewUrl = nodemailer.getTestMessageUrl(info);
 
     console.log("Password reset email sent.");
-    console.log("Ethereal preview:", previewUrl);
+    // console.log("Ethereal preview:", previewUrl);
 
     return res.status(200).json({
       message: "If the email exists, a reset link will be sent.",

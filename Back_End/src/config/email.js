@@ -1,17 +1,14 @@
+
 import nodemailer from "nodemailer";
 
-const testAccount = await nodemailer.createTestAccount();
-
 const transporter = nodemailer.createTransport({
-  host: testAccount.smtp.host,
-  port: testAccount.smtp.port,
-  secure: testAccount.smtp.secure,
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: testAccount.user,
-    pass: testAccount.pass,
+    user: process.env.BREVO_SMTP_LOGIN,
+    pass: process.env.BREVO_SMTP_KEY,
   },
 });
-
-console.log("Ethereal test account:", testAccount.user);
 
 export default transporter;
