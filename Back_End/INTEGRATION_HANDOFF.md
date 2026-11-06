@@ -14,7 +14,7 @@ This document is the one to build against.
 | --- | --- | --- |
 | 1 | **The API has no CORS headers.** Calling it from `localhost:5173` or any other origin fails on preflight. | Run the dev server with a **proxy** (config in §1.2). Do not try to "fix" it on the client. |
 | 2 | **Rate limit is 5 requests per 60 seconds, shared by EVERYONE** (one global key, not per user/IP). | Load pages with the smallest possible number of calls, cache categories, debounce search inputs, and poll payment status no faster than every 15s. Ask backend to fix this before QA. |
-| 3 | **Products have no description, colours, or brand.** They now have `image` and `sizes` (`[{ size, quantity }]`), but products created before that change have `sizes: []` until an admin fills them in. | Build the PDP around `image` and per-size stock. Treat a product with no sizes as not purchasable and let the admin add sizes first. |
+| 3 | **Products have no description, colours, or brand.** They have `image`, optional `images`, and `sizes` (`[{ size, quantity }]`), but products created before that change have `sizes: []` until an admin fills them in. | Build the PDP around the image gallery and per-size stock. Treat a product with no sizes as not purchasable and let the admin add sizes first. |
 
 If those three are unresolved, end-to-end browser testing will be painful. Everything else in
 this doc assumes you work around them.
@@ -211,6 +211,7 @@ export interface Product {
   price: number;          // USD, decimals — NOT cents
   categories: Category | string; // populated object on list/detail
   image?: string;
+  images?: string[];
   sizes: ProductSize[];   // empty until an admin adds sizes
   quantity: number;       // derived total: sum of sizes[].quantity
   // no description, colour, brand, rating, createdAt
@@ -401,7 +402,7 @@ keystroke at 5 req/min.
 
 Returns a bare `Product` (category populated). `404` → not found.
 
-There is no `description`, colour, or brand. Render `image`, name, price, category, and the
+There is no `description`, colour, or brand. Render the `image`/`images` gallery, name, price, category, and the
 `sizes` array. Each size carries its own stock.
 
 PDP rules:
@@ -568,8 +569,8 @@ Do not render `confirmed` — nothing produces it. Any other jump → `400`.
 **Products:**
 
 ```http
-POST /api/products   { name, price, categories, image?, sizes? }
-PUT  /api/products/:id { name, price, categories, image?, sizes? }
+POST /api/products   { name, price, categories, image?, images?, sizes? }
+PUT  /api/products/:id { name, price, categories, image?, images?, sizes? }
 DELETE /api/products/:id
 ```
 

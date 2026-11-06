@@ -337,6 +337,10 @@ Content-Type: application/json
   "price": 189.99,
   "categories": "665f20...",
   "image": "https://example.com/ultraboost.jpg",
+  "images": [
+    "https://example.com/ultraboost-side.jpg",
+    "https://example.com/ultraboost-back.jpg"
+  ],
   "sizes": [
     { "size": "40", "quantity": 3 },
     { "size": "41", "quantity": 5 }
@@ -344,7 +348,7 @@ Content-Type: application/json
 }
 ```
 
-`201 { "savedProducts": { "_id", "name", "price", "categories", "image", "sizes": [...], "quantity" } }`
+`201 { "savedProducts": { "_id", "name", "price", "categories", "image", "images": [...], "sizes": [...], "quantity" }}`
 → `400 { "message": "Can't create" }` on validation failure (message is generic).
 
 - `sizes` is optional and defaults to `[]`.
@@ -354,7 +358,7 @@ Content-Type: application/json
 
 #### Update / delete
 
-`PUT`/`PATCH` body `{ name, price, categories, image, sizes }` — omitted fields are left unchanged.
+`PUT`/`PATCH` body `{ name, price, categories, image, images, sizes }` — omitted fields are left unchanged. `images` is an array of additional image URLs.
 When `sizes` is present, total `quantity` is recalculated from it. If `sizes` is omitted, a plain
 `quantity` value is still accepted for legacy callers. `200 { "updatedProduct": {...} }`.
 
@@ -632,6 +636,7 @@ stripe listen --forward-to localhost:3000/api/payments/webhook
   "name": "string",
   "price": 189.99,
   "image": "string?",
+  "images": ["string"],
   "categories": "ObjectId → Category",
   "sizes": [ { "size": "40", "quantity": 3 } ],
   "quantity": 3

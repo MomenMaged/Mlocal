@@ -256,6 +256,7 @@ function Home() {
               <div className="relative overflow-hidden">
                 <img
                   src={
+                    product.images?.[0] ||
                     product.image ||
                     productImages[index % productImages.length]
                   }

@@ -19,6 +19,7 @@ export default function ProductForm() {
     categories: "",
     sizes: [],
     image: "",
+    images: [],
   });
 
   const [loading, setLoading] = useState(isEditing);
@@ -58,6 +59,7 @@ export default function ProductForm() {
                 }))
               : [],
             image: product.image || "",
+            images: Array.isArray(product.images) ? product.images : [],
           });
         }
       } catch (error) {
@@ -176,6 +178,7 @@ export default function ProductForm() {
       categories: formData.categories,
       sizes,
       image: formData.image.trim(),
+      images: formData.images.map((image) => image.trim()).filter(Boolean),
     };
 
     try {
@@ -382,10 +385,10 @@ export default function ProductForm() {
           </p>
         </div>
 
-        {/* Image URL */}
+        {/* Product images */}
         <div>
           <label className="mb-2 block text-sm font-semibold">
-            Product image URL
+            Product image URLs
           </label>
 
           <input
@@ -393,26 +396,70 @@ export default function ProductForm() {
             name="image"
             value={formData.image}
             onChange={handleChange}
-            placeholder="https://example.com/product-image.jpg"
+            placeholder="Primary image URL"
             className="field"
           />
 
-          {/* Image Preview */}
-          {formData.image && (
-            <div className="mt-4">
-              <p className="mb-2 text-sm text-ink-soft">Image preview</p>
+          <div className="mt-3 space-y-2">
+            {formData.images.map((image, index) => (
+              <div key={`${index}-${image}`} className="flex gap-2">
+                <input
+                  type="url"
+                  value={image}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      images: prev.images.map((entry, entryIndex) =>
+                        entryIndex === index ? e.target.value : entry
+                      ),
+                    }))
+                  }
+                  placeholder={`Additional image URL ${index + 1}`}
+                  className="field"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      images: prev.images.filter(
+                        (_, entryIndex) => entryIndex !== index
+                      ),
+                    }))
+                  }
+                  className="rounded-full px-3 text-sm font-semibold text-danger hover:bg-danger/10"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
 
-              <img
-                src={formData.image}
-                alt="Product preview"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-                onLoad={(e) => {
-                  e.currentTarget.style.display = "block";
-                }}
-                className="h-48 w-48 rounded-2xl border border-white/60 object-cover"
-              />
+          <button
+            type="button"
+            onClick={() =>
+              setFormData((prev) => ({
+                ...prev,
+                images: [...prev.images, ""],
+              }))
+            }
+            className="mt-3 text-sm font-semibold text-grape hover:text-sky"
+          >
+            + Add another image
+          </button>
+
+          {(formData.image || formData.images.some(Boolean)) && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              {[formData.image, ...formData.images]
+                .filter(Boolean)
+                .map((image) => (
+                  <img
+                    key={image}
+                    src={image}
+                    alt="Product preview"
+                    className="h-28 w-28 rounded-2xl border border-white/60 object-cover"
+                  />
+                ))}
             </div>
           )}
         </div>

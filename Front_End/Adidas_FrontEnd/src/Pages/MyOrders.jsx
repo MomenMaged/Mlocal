@@ -221,7 +221,15 @@ export default function MyOrders() {
                       key={`${item.product}-${index}`}
                       className="flex items-center justify-between gap-4"
                     >
-                      <div>
+                      {item.images?.[0] && (
+                        <img
+                          src={item.images[0]}
+                          alt={item.name}
+                          className="h-16 w-16 rounded-xl object-cover"
+                        />
+                      )}
+
+                      <div className="min-w-0 flex-1">
                         <h3 className="font-semibold">{item.name}</h3>
 
                         <p className="mt-1 text-sm text-ink-soft">

@@ -190,7 +190,11 @@ res.status(200).json({
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, image, categories, sizes } = req.body;
+    const { name, price, image, images, categories, sizes } = req.body;
+    const productImages = Array.isArray(images)
+      ? images.filter((value) => typeof value === "string" && value.trim())
+      : [];
+    const primaryImage = typeof image === "string" ? image.trim() : "";
 
     const parsed = parseSizes(sizes ?? []);
 
@@ -201,7 +205,8 @@ export const createProduct = async (req, res) => {
     const product = new Product({
       name,
       price,
-      image,
+      image: primaryImage || productImages[0] || "",
+      images: productImages,
       categories,
       sizes: parsed.sizes,
       quantity: sumSizes(parsed.sizes),
@@ -234,11 +239,21 @@ export const getProductByID = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { name, price, image, quantity, categories, sizes } = req.body;
+     const { name, price, image, images, quantity, categories, sizes } = req.body;
     const updates = {};
 
     if (name !== undefined) updates.name = name;
     if (price !== undefined) updates.price = price;
+    if (images !== undefined) {
+      if (!Array.isArray(images)) {
+        return res.status(400).json({ message: "Images must be an array" });
+      }
+
+      updates.images = images.filter(
+        (value) => typeof value === "string" && value.trim()
+      );
+    }
+
     if (image !== undefined) updates.image = image;
     if (categories !== undefined) updates.categories = categories;
 

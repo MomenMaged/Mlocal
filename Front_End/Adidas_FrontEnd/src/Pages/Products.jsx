@@ -20,6 +20,87 @@ function isInStock(product) {
   return false;
 }
 
+function ProductCard({ product, index }) {
+  const images = [
+    ...new Set(
+      [product.image, ...(Array.isArray(product.images) ? product.images : [])]
+        .filter(Boolean)
+    ),
+  ];
+  const displayImages = images.length
+    ? images
+    : [productImages[index % productImages.length]];
+  const [imageIndex, setImageIndex] = useState(0);
+
+  function changeImage(event, offset) {
+    event.preventDefault();
+    event.stopPropagation();
+    setImageIndex(
+      (current) =>
+        (current + offset + displayImages.length) % displayImages.length
+    );
+  }
+
+  return (
+    <Link
+      to={`/products/${product._id || product.id}`}
+      className="glass card-hover group block overflow-hidden"
+    >
+      <div className="relative overflow-hidden">
+        <img
+          src={displayImages[imageIndex]}
+          alt={product.name}
+          loading="lazy"
+          className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
+        />
+
+        {displayImages.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label={`Previous image for ${product.name}`}
+              onClick={(event) => changeImage(event, -1)}
+              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-lg text-white transition hover:bg-black/65"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              aria-label={`Next image for ${product.name}`}
+              onClick={(event) => changeImage(event, 1)}
+              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-lg text-white transition hover:bg-black/65"
+            >
+              ›
+            </button>
+          </>
+        )}
+
+        <span
+          className={`chip absolute left-3 top-3 ${
+            isInStock(product) ? "chip-delivered" : "chip-cancelled"
+          }`}
+        >
+          {isInStock(product) ? "In stock" : "Out of stock"}
+        </span>
+      </div>
+
+      <div className="p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+          {product.categories?.name || product.category?.name || "Sportswear"}
+        </p>
+
+        <h2 className="mt-1.5 line-clamp-1 font-display text-sm font-bold sm:text-base">
+          {product.name}
+        </h2>
+
+        <p className="mt-2 text-sm font-bold sm:text-base">
+          EGP {Number(product.price).toLocaleString("en-US")}
+        </p>
+      </div>
+    </Link>
+  );
+}
+
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -215,47 +296,11 @@ function Products() {
       {products.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {products.map((product, index) => (
-            <Link
+            <ProductCard
               key={product._id || product.id}
-              to={`/products/${product._id || product.id}`}
-              className="glass card-hover group block overflow-hidden"
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={
-                    product.image ||
-                    productImages[index % productImages.length]
-                  }
-                  alt={product.name}
-                  loading="lazy"
-                  className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-
-                <span
-                  className={`chip absolute left-3 top-3 ${
-                    isInStock(product) ? "chip-delivered" : "chip-cancelled"
-                  }`}
-                >
-                  {isInStock(product) ? "In stock" : "Out of stock"}
-                </span>
-              </div>
-
-              <div className="p-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
-                  {product.categories?.name ||
-                    product.category?.name ||
-                    "Sportswear"}
-                </p>
-
-                <h2 className="mt-1.5 line-clamp-1 font-display text-sm font-bold sm:text-base">
-                  {product.name}
-                </h2>
-
-                <p className="mt-2 text-sm font-bold sm:text-base">
-                  EGP {Number(product.price).toLocaleString("en-US")}
-                </p>
-              </div>
-            </Link>
+              product={product}
+              index={index}
+            />
           ))}
         </div>
       ) : (

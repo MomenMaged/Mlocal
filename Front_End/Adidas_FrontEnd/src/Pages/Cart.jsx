@@ -131,7 +131,7 @@ export default function Cart() {
             const productId = getProductId(item);
             const itemId = item._id;
             const quantity = Number(item.quantity || 1);
-            const image = product.image ?? product.images?.[0] ?? item.image;
+            const image = product.images?.[0] ?? product.image ?? item.image;
 
             const sizeStock =
               product.sizes?.find((entry) => entry.size === item.size)

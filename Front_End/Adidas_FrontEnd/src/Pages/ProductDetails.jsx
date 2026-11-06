@@ -17,6 +17,7 @@ function ProductDetails() {
   const [cartMessage, setCartMessage] = useState("");
   const [cartError, setCartError] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
 
   async function handleAddToCart() {
     if (!user) {
@@ -54,6 +55,7 @@ function ProductDetails() {
 
         setProduct(response.data.product ?? response.data);
         setSelectedSize("");
+        setSelectedImage("");
       } catch (err) {
         console.error("Failed to load product:", err);
 
@@ -99,8 +101,23 @@ function ProductDetails() {
   }
 
   const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+  const productImages = [
+    ...new Set([product.image, ...(product.images ?? [])].filter(Boolean)),
+  ];
+  const activeImage = selectedImage || productImages[0];
+  const activeImageIndex = Math.max(productImages.indexOf(activeImage), 0);
   const hasStock = sizes.some((entry) => entry.quantity > 0);
   const selectedEntry = sizes.find((entry) => entry.size === selectedSize);
+
+  function showImage(offset) {
+    if (productImages.length < 2) return;
+
+    const nextIndex =
+      (activeImageIndex + offset + productImages.length) %
+      productImages.length;
+
+    setSelectedImage(productImages[nextIndex]);
+  }
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
@@ -112,17 +129,63 @@ function ProductDetails() {
       </Link>
 
       <div className="grid gap-6 md:grid-cols-2 md:gap-10">
-        {/* Product image */}
-        <div className="glass overflow-hidden">
-          {product.image ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              className="aspect-[4/5] w-full object-cover"
-            />
-          ) : (
-            <div className="flex aspect-[4/5] items-center justify-center bg-white/40 text-ink-soft">
-              No image available
+        {/* Product images */}
+        <div>
+          <div className="glass relative overflow-hidden">
+            {activeImage ? (
+              <img
+                src={activeImage}
+                alt={product.name}
+                className="aspect-[4/5] w-full object-cover"
+              />
+            ) : (
+              <div className="flex aspect-[4/5] items-center justify-center bg-white/40 text-ink-soft">
+                No image available
+              </div>
+            )}
+
+            {productImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous product image"
+                  onClick={() => showImage(-1)}
+                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-xl text-white transition hover:bg-black/65"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next product image"
+                  onClick={() => showImage(1)}
+                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-xl text-white transition hover:bg-black/65"
+                >
+                  ›
+                </button>
+              </>
+            )}
+          </div>
+
+          {productImages.length > 1 && (
+            <div className="mt-3 flex gap-3 overflow-x-auto">
+              {productImages.map((image) => (
+                <button
+                  key={image}
+                  type="button"
+                  onClick={() => setSelectedImage(image)}
+                  className={`shrink-0 overflow-hidden rounded-xl border-2 ${
+                    activeImage === image
+                      ? "border-grape"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`${product.name} thumbnail`}
+                    className="h-20 w-16 object-cover"
+                  />
+                </button>
+              ))}
             </div>
           )}
         </div>

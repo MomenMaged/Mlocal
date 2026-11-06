@@ -126,6 +126,11 @@ export const createOrder = async (req, res) => {
           product: product._id,
           name: product.name,
           price: product.price,
+          images: [
+            ...new Set(
+              [product.image, ...(product.images ?? [])].filter(Boolean)
+            ),
+          ],
           quantity: item.quantity,
           size,
         });
@@ -658,7 +663,7 @@ export const getOrderDetailsAdmin = async (req, res) => {
 
     const order = await Order.findById(id)
       .populate("user", "name email")
-      .populate("items.product", "name image")
+      .populate("items.product", "name image images")
       .lean();
 
     if (!order) {

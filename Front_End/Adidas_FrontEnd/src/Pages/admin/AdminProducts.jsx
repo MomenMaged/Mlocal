@@ -257,9 +257,9 @@ export default function AdminProducts() {
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          {product.image ? (
+                          {product.images?.[0] || product.image ? (
                             <img
-                              src={product.image}
+                              src={product.images?.[0] || product.image}
                               alt={product.name}
                               className="h-12 w-12 rounded-xl bg-white/40 object-cover"
                               onError={(e) => {
