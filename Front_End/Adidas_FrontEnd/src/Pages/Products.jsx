@@ -23,8 +23,10 @@ function isInStock(product) {
 function ProductCard({ product, index }) {
   const images = [
     ...new Set(
-      [product.image, ...(Array.isArray(product.images) ? product.images : [])]
-        .filter(Boolean)
+      [
+        product.image,
+        ...(Array.isArray(product.images) ? product.images : []),
+      ].filter(Boolean),
     ),
   ];
   const displayImages = images.length
@@ -37,7 +39,7 @@ function ProductCard({ product, index }) {
     event.stopPropagation();
     setImageIndex(
       (current) =>
-        (current + offset + displayImages.length) % displayImages.length
+        (current + offset + displayImages.length) % displayImages.length,
     );
   }
 
@@ -139,7 +141,7 @@ function Products() {
         setCategories(
           Array.isArray(response.data)
             ? response.data
-            : response.data.categories || []
+            : response.data.categories || [],
         );
       } catch (err) {
         console.error("Failed to load categories:", err);
@@ -187,16 +189,6 @@ function Products() {
     setSearchParams({});
   }
 
-  if (loading) {
-    return (
-      <main className="flex min-h-[60vh] items-center justify-center">
-        <div className="glass px-8 py-6 text-sm font-bold uppercase tracking-widest">
-          Loading products...
-        </div>
-      </main>
-    );
-  }
-
   if (error) {
     return (
       <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6">
@@ -222,9 +214,7 @@ function Products() {
           Find your next favourite
         </p>
 
-        <h1 className="mt-3 text-4xl font-bold sm:text-6xl">
-          All products
-        </h1>
+        <h1 className="mt-3 text-4xl font-bold sm:text-6xl">All products</h1>
 
         <p className="mt-4 max-w-xl text-ink-soft">
           Explore our sportswear, footwear, and accessories.
@@ -293,7 +283,14 @@ function Products() {
       </div>
 
       {/* Products grid */}
-      {products.length > 0 ? (
+
+      {loading ? (
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <div className="glass px-8 py-6 text-sm font-bold uppercase tracking-widest">
+            Loading products...
+          </div>
+        </div>
+      ) : products.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {products.map((product, index) => (
             <ProductCard
