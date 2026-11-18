@@ -54,6 +54,14 @@ export function AuthProvider({ children }) {
     clearSession();
   }, [clearSession]);
 
+  const updateUser = useCallback((updates) => {
+  setUser((current) => {
+    const next = { ...current, ...updates };
+    localStorage.setItem("user", JSON.stringify(next));
+    return next;
+  });
+}, []);
+
   useEffect(() => {
     window.addEventListener("auth:token-expired", handleTokenExpired);
 
@@ -113,7 +121,7 @@ export function AuthProvider({ children }) {
   }, [clearSession]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

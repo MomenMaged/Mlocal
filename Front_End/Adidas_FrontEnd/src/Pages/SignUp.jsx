@@ -14,6 +14,7 @@ export default function SignUp() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -111,11 +112,11 @@ export default function SignUp() {
                 >
                   {field.label}
                 </label>
-
+              <div className="relative"> 
                 <input
                   id={field.id}
                   name={field.id}
-                  type={field.type}
+                  type={field.type === "password" && showPassword ? "text" : field.type}
                   autoComplete={field.autoComplete}
                   value={form[field.id]}
                   onChange={handleChange}
@@ -124,6 +125,15 @@ export default function SignUp() {
                   className="field"
                   placeholder={field.placeholder}
                 />
+                {field.type === "password" && (
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((show) => !show)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-sm font-semibold text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>)}
+                  </div>
               </div>
             ))}
 

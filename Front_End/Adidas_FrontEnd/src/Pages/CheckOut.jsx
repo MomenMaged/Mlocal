@@ -165,7 +165,7 @@ export default function Checkout() {
             <h2 className="mb-5 text-xl font-bold">Payment method</h2>
 
             <div className="space-y-3">
-              <label className="glass-subtle flex cursor-pointer items-center gap-3 p-4 transition has-[:checked]:border-grape/60 has-[:checked]:bg-white/80">
+              <label className="glass-subtle flex cursor-pointer items-center gap-3 p-4 transition has-[:checked]:border-grape/100">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -179,7 +179,7 @@ export default function Checkout() {
                 </span>
               </label>
 
-              <label className="glass-subtle flex cursor-pointer items-center gap-3 p-4 transition has-[:checked]:border-grape/60 has-[:checked]:bg-white/80">
+              <label className="glass-subtle flex cursor-pointer items-center gap-3 p-4 transition has-[:checked]:border-grape/100">
                 <input
                   type="radio"
                   name="paymentMethod"

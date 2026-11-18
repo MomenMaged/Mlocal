@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/useAuth.jsx";
+
+// inside the component
 
 export default function Profile() {
+  const { updateUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -101,6 +105,7 @@ export default function Profile() {
       const updatedUser = response.data.user;
 
       setProfile(updatedUser);
+      updateUser({ name: updatedUser.name, email: updatedUser.email });
       setFormData({
         name: updatedUser.name,
         email: updatedUser.email,

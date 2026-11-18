@@ -7,11 +7,13 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const from = location.state?.from?.pathname || "/";
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const successMessage = location.state?.message;
 
@@ -32,7 +34,7 @@ export default function Login() {
       if (response.data.role === "admin") {
         navigate("/admin", { replace: true });
       } else {
-        navigate("/", { replace: true });
+        navigate(from, { replace: true });
       }
     } catch (err) {
       setError(
@@ -93,10 +95,10 @@ export default function Login() {
               >
                 Password
               </label>
-
+<div className="relative">
               <input
                 id="password"
-                type="password"
+                type={showPassword? "text" :"password"}
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -104,6 +106,16 @@ export default function Login() {
                 className="field"
                 placeholder="Enter your password"
               />
+
+              <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-sm font-semibold text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+                </div>
+
             </div>
 
             <div className="flex justify-end">
@@ -144,8 +156,8 @@ export default function Login() {
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-ink-soft">
-          <Link to="/" className="transition hover:text-ink">
+        <p className="mt-6 text-center text-lg text-ink-soft">
+          <Link to="/" className="transition hover:text-ink ">
             ← Back to store
           </Link>
         </p>

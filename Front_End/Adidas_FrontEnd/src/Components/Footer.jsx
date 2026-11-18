@@ -5,7 +5,7 @@ const columns = [
     title: "Shop",
     links: [
       { label: "All products", to: "/products" },
-      { label: "Your bag", to: "/cart" },
+      { label: "Your cart", to: "/cart" },
       { label: "My orders", to: "/my-orders" },
     ],
   },

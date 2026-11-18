@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useCart } from "../context/useCart.js";
 import api from "../services/api";
 
 export default function PaymentSuccess() {
+  const { refreshCart } = useCart();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const sessionId = searchParams.get("session_id");
@@ -29,6 +31,7 @@ export default function PaymentSuccess() {
         const { orderId, paymentStatus } = response.data;
 
         if (paymentStatus === "paid" && orderId) {
+           await refreshCart();
           if (!cancelled) {
             navigate(`/order-confirmation/${orderId}`, {
               replace: true,
@@ -90,11 +93,12 @@ export default function PaymentSuccess() {
           </div>
         )}
 
-        {failed && (
-          <Link to="/products" className="btn-primary mt-8">
-            Continue shopping
-          </Link>
-        )}
+       {failed && (
+  <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+    <Link to="/my-orders" className="btn-primary">View my orders</Link>
+    <Link to="/products" className="btn-glass">Continue shopping</Link>
+  </div>
+)}
       </div>
     </main>
   );

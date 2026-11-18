@@ -146,7 +146,7 @@ export default function MyOrders() {
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${
               activeFilter === filter
                 ? "bg-gradient-to-r from-grape to-sky text-white shadow-glow"
-                : "border border-white/70 bg-white/50 text-ink-soft hover:bg-white/80 hover:text-ink"
+                : "border border-white/70 bg-white/50  hover:bg-white/10 hover:text-ink"
             }`}
           >
             {filter === "all" ? "All orders" : filter}

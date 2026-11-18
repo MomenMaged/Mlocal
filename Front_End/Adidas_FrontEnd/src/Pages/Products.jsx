@@ -231,7 +231,7 @@ function Products() {
             setPage(1);
           }}
           placeholder="Search products..."
-          className="field min-w-0 flex-1 border-0 bg-white/40 focus:bg-white/70"
+          className="field min-w-0 flex-1 border-0 bg-white/40 "
         />
 
         <select
@@ -317,7 +317,7 @@ function Products() {
       {pagination && pagination.totalPages > 0 && (
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <button
-            disabled={!pagination.hasPreviousPage}
+            disabled={loading || !pagination.hasPreviousPage}
             onClick={() => setPage((prev) => prev - 1)}
             className="btn-glass"
           >
@@ -329,7 +329,7 @@ function Products() {
           </span>
 
           <button
-            disabled={!pagination.hasNextPage}
+            disabled={loading || !pagination.hasNextPage}
             onClick={() => setPage((prev) => prev + 1)}
             className="btn-glass"
           >

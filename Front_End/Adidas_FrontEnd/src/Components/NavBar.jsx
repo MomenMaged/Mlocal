@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState , useEffect, useRef} from "react";
+import { Link, useNavigate , useLocation} from "react-router-dom";
 import { useAuth } from "../context/useAuth.jsx";
 import { useCart } from "../context/useCart.js";
 
@@ -9,6 +9,39 @@ function Navbar() {
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
   const navigate = useNavigate();
+  const headerRef = useRef(null);
+const location = useLocation();
+
+useEffect(() => {
+  setMenuOpen(false);
+  setSearchOpen(false);
+}, [location.pathname]);
+
+useEffect(() => {
+  if (!menuOpen && !searchOpen) return undefined;
+
+  function handleClickOutside(event) {
+    if (headerRef.current && !headerRef.current.contains(event.target)) {
+      setMenuOpen(false);
+      setSearchOpen(false);
+    }
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === "Escape") {
+      setMenuOpen(false);
+      setSearchOpen(false);
+    }
+  }      
+
+  document.addEventListener("pointerdown", handleClickOutside);
+  document.addEventListener("keydown", handleKeyDown);
+
+  return () => {
+    document.removeEventListener("pointerdown", handleClickOutside);
+    document.removeEventListener("keydown", handleKeyDown);
+  };
+}, [menuOpen, searchOpen]);
 
   async function handleLogout() {
     await logout();
@@ -27,7 +60,7 @@ function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header ref={headerRef} className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div className="mx-auto max-w-[1600px]">
         <div className="glass-nav overflow-hidden">
           <div className="flex h-9 items-center justify-center rounded-t-[1.3rem] bg-gradient-to-r from-[#5b21b6] via-[#1d4ed8] to-[#0e7490] px-4 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white">
@@ -72,9 +105,9 @@ function Navbar() {
                 Shop
               </Link>
 
-              <Link to="/my-orders" className="nav-link">
+              {user && <Link to="/my-orders" className="nav-link">
                 My orders
-              </Link>
+              </Link>}
 
               {user?.role === "admin" && (
                 <Link to="/admin" className="nav-link">
@@ -185,7 +218,7 @@ function Navbar() {
               name="search"
               autoFocus
               placeholder="Search products..."
-              className="field flex-1 border-0 bg-white/40 focus:bg-white/70"
+              className="field flex-1 border-0 bg-white/40 "
             />
 
             <button
