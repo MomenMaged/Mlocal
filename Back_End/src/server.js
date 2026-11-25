@@ -14,6 +14,7 @@ import OrderRouter from "./Router/OrderRouter.js";
 import adminRouter from "./Router/AdminRouter.js";
 import { handleStripeWebhook } from "./Controller/stripeWebhookController.js";
 import { startOrderExpirationJob } from "./Jobs/expirePendingCardOrders.js";
+import ChatRouter from "./Router/ChatRouter.js"; 
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -52,6 +53,7 @@ app.use("/api/user", UserRouter);
 app.use("/api/cart", CartRouter);
 app.use("/api/orders", OrderRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/chat", ChatRouter);
 
 // Connect to MongoDB on startup
 connectDB().then(() => {

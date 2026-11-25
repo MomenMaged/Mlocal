@@ -25,6 +25,11 @@ const ProductSchema = new mongoose.Schema({
 
 
     },
+    description: {
+  type: String,
+  trim: true,
+  default: "",
+},
     price:{
     type:Number,
     required: true
@@ -56,7 +61,15 @@ const ProductSchema = new mongoose.Schema({
   min: 0,
   default: 0,
   
-}
+},
+embedding: {
+  type: [Number],
+  default: [],
+},
+activities: {
+  type: [String],
+  default: [],
+},
 })
 
 const Product = mongoose.model('Product', ProductSchema);
