@@ -1,6 +1,6 @@
 
 import "dotenv/config";
-import { ai, EMBEDDING_MODEL } from "../Config/modelConfig.js";
+import { ai, EMBEDDING_MODEL } from "../config/modelConfig.js";
 
 const testEmbedding = async () => {
   try {

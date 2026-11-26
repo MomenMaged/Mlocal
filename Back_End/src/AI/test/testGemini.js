@@ -1,7 +1,7 @@
 
 import "dotenv/config";
 
-import { ai, CHAT_MODEL } from "../Config/modelConfig.js";
+import { ai, CHAT_MODEL } from "../config/modelConfig.js";
 
 const testGemini = async () => {
   try {
