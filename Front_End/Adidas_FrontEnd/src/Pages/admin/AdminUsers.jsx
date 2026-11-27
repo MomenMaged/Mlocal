@@ -198,7 +198,7 @@ export default function AdminUsers() {
       {/* Users Table */}
       <div className="glass overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left text-sm">
+          <table className="table-stack w-full min-w-[760px] text-left text-sm">
             <thead className="bg-white/40 text-xs uppercase tracking-wider text-ink-soft">
               <tr>
                 <th className="px-6 py-4 font-semibold">User</th>
@@ -238,15 +238,15 @@ export default function AdminUsers() {
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-ink-soft">{user.email}</td>
+                    <td data-label="Email" className="px-6 py-4 text-ink-soft">{user.email}</td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Role" className="px-6 py-4">
                       <span className={`chip ${getRoleClass(user.role)}`}>
                         {user.role}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-ink-soft">
+                    <td data-label="Joined" className="px-6 py-4 text-ink-soft">
                       {user.createdAt
                         ? new Date(user.createdAt).toLocaleDateString()
                         : "—"}

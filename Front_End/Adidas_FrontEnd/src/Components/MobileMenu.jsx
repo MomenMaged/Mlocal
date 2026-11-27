@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import api from "../services/api.js";
+import useCategories from "../hooks/useCategories.js";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 const pexels = (id) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop`;
@@ -96,34 +97,13 @@ function Icon({ name, className = "h-5 w-5" }) {
 
 export default function MobileMenu({ open, onClose, user, itemCount, onLogout, onSearch }) {
   const closeButtonRef = useRef(null);
-  const [categories, setCategories] = useState([]);
-  const [loadedCategories, setLoadedCategories] = useState(false);
+  // Shared with the navbar: one request per page load (see hooks/useCategories.js)
+  const categories = useCategories();
 
   // Move keyboard focus into the menu when it opens (accessibility)
   useEffect(() => {
     if (open) closeButtonRef.current?.focus({ preventScroll: true });
   }, [open]);
-
-  // Load categories the first time the menu is opened
-  useEffect(() => {
-    if (!open || loadedCategories) return;
-    let cancelled = false;
-
-    api("/api/category")
-      .then((response) => {
-        if (cancelled) return;
-        const data = response.data;
-        setCategories(Array.isArray(data) ? data : data.categories ?? []);
-        setLoadedCategories(true);
-      })
-      .catch(() => {
-        // Menu still works without categories; try again next time it opens
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, loadedCategories]);
 
   const quickActions = [
     { to: "/products", icon: "bag", label: "Shop all" },
@@ -156,15 +136,19 @@ export default function MobileMenu({ open, onClose, user, itemCount, onLogout, o
           <span className="text-ink">.</span>
         </Link>
 
-        <button
-          ref={closeButtonRef}
-          type="button"
-          aria-label="Close menu"
-          onClick={onClose}
-          className="btn-glass h-10 w-10 p-0"
-        >
-          <Icon name="close" />
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle className="btn-glass h-10 w-10 p-0" />
+
+          <button
+            ref={closeButtonRef}
+            type="button"
+            aria-label="Close menu"
+            onClick={onClose}
+            className="btn-glass h-10 w-10 p-0"
+          >
+            <Icon name="close" />
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
@@ -187,7 +171,7 @@ export default function MobileMenu({ open, onClose, user, itemCount, onLogout, o
           <Link to="/products" onClick={onClose} className="menu-promo">
             <img src={PROMO_IMAGE} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/30 to-transparent" />
-            <div className="relative flex h-full flex-col justify-end p-4">
+            <div className="relative flex h-full flex-col justify-end p-4 text-white">
               <span className="w-fit rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md">
                 New season
               </span>
@@ -274,7 +258,7 @@ export default function MobileMenu({ open, onClose, user, itemCount, onLogout, o
         <div className="menu-item mt-auto px-4" style={step()}>
           {user ? (
             <div className="glass flex items-center gap-3 rounded-full p-2 pr-2">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-grape to-[#bf5af2] font-semibold text-white">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta font-semibold text-on-cta">
                 {user.name?.trim()?.[0]?.toUpperCase() || "?"}
               </span>
               <span className="min-w-0 flex-1">

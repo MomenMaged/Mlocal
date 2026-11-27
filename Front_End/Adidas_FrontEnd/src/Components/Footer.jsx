@@ -21,7 +21,7 @@ const columns = [
 
 export default function Footer() {
   return (
-    <footer className="px-3 pb-6 pt-10 sm:px-5">
+    <footer className="px-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-10 sm:px-5">
       <div className="glass mx-auto max-w-[1600px] rounded-glass-lg px-6 py-8 sm:px-10">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
@@ -36,7 +36,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-10">
+          <div className="grid grid-cols-2 gap-8 sm:flex sm:flex-wrap sm:gap-10">
             {columns.map((column) => (
               <div key={column.title}>
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">

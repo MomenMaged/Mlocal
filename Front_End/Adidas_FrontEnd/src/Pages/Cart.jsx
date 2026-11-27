@@ -124,7 +124,7 @@ export default function Cart() {
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[minmax(0,1fr)_340px]">
         <section className="space-y-4">
           {items.map((item) => {
             const product = getProduct(item);
@@ -141,22 +141,22 @@ export default function Cart() {
             return (
               <article
                 key={itemId || String(productId)}
-                className="glass flex flex-col gap-4 p-4 sm:flex-row"
+                className="glass grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-4 p-3 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:p-4"
               >
                 {image ? (
                   <img
                     src={image}
                     alt={product.name || "Product"}
-                    className="h-36 w-full rounded-2xl bg-white/40 object-cover sm:w-32"
+                    className="aspect-[4/5] w-full rounded-2xl bg-white/40 object-cover sm:aspect-auto sm:h-32"
                   />
                 ) : (
-                  <div className="flex h-36 w-full items-center justify-center rounded-2xl bg-white/40 text-sm text-ink-soft sm:w-32">
+                  <div className="flex aspect-[4/5] w-full items-center justify-center rounded-2xl bg-white/40 text-xs text-ink-soft sm:aspect-auto sm:h-32">
                     No image
                   </div>
                 )}
 
-                <div className="flex flex-1 flex-col items-start">
-                  <h2 className="font-display text-lg font-bold">
+                <div className="flex min-w-0 flex-col items-start">
+                  <h2 className="break-words font-display text-base font-bold sm:text-lg">
                     {product.name || "Product"}
                   </h2>
 
@@ -205,7 +205,7 @@ export default function Cart() {
                   </button>
                 </div>
 
-                <p className="font-display text-lg font-bold">
+                <p className="col-start-2 font-display text-lg font-bold sm:col-start-auto sm:text-right">
                   EGP{" "}
                   {(
                     Number(product.price ?? item.price ?? 0) * quantity
@@ -216,7 +216,7 @@ export default function Cart() {
           })}
         </section>
 
-        <aside className="glass-strong h-fit p-6">
+        <aside className="glass-strong h-fit p-5 sm:p-6 md:sticky md:top-28">
           <h2 className="text-xl font-bold">Order summary</h2>
 
           <div className="mt-6 flex justify-between text-sm">

@@ -226,7 +226,7 @@ function Products() {
       </section>
 
       {/* Search and filters */}
-      <div className="glass mt-6 flex flex-col gap-3 p-3 md:flex-row">
+      <div className="glass mt-6 grid grid-cols-2 gap-3 p-3 md:flex md:flex-row">
         <input
           type="search"
           value={search}
@@ -235,7 +235,7 @@ function Products() {
             setPage(1);
           }}
           placeholder="Search products..."
-          className="field min-w-0 flex-1 border-0 bg-white/40 "
+          className="field col-span-2 min-w-0 flex-1 border-0 bg-white/40"
         />
 
         <select
@@ -244,7 +244,7 @@ function Products() {
             updateParam("category", e.target.value);
             setPage(1);
           }}
-          className="field md:w-56"
+          className="field min-w-0 md:w-56"
         >
           <option value="all">All categories</option>
 
@@ -264,7 +264,7 @@ function Products() {
             setSortPrice(e.target.value);
             setPage(1);
           }}
-          className="field md:w-52"
+          className="field min-w-0 md:w-52"
         >
           <option value="">Default order</option>
           <option value="asc">Price: Low to High</option>

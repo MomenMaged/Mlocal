@@ -130,7 +130,7 @@ function ProductDetails() {
 
       <div className="grid gap-6 md:grid-cols-2 md:gap-10">
         {/* Product images */}
-        <div>
+        <div className="md:sticky md:top-28 md:self-start">
           <div className="glass relative overflow-hidden">
             {activeImage ? (
               <img
@@ -167,7 +167,7 @@ function ProductDetails() {
           </div>
 
           {productImages.length > 1 && (
-            <div className="mt-3 flex gap-3 overflow-x-auto">
+            <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto">
               {productImages.map((image) => (
                 <button
                   key={image}
@@ -191,14 +191,14 @@ function ProductDetails() {
         </div>
 
         {/* Product information */}
-        <div className="glass-strong flex flex-col justify-center p-6 sm:p-9">
+        <div className="glass-strong flex flex-col justify-center p-5 sm:p-9">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-grape">
             {product.categories?.name ||
               product.category?.name ||
               "Sportswear"}
           </p>
 
-          <h1 className="mt-3 text-3xl font-bold sm:text-5xl">
+          <h1 className="mt-3 break-words text-3xl font-bold lg:text-4xl xl:text-5xl">
             {product.name}
           </h1>
 
@@ -246,8 +246,8 @@ function ProductDetails() {
                       }
                       className={`min-w-14 rounded-full border px-4 py-2 text-sm font-semibold transition ${
                         isSelected
-                          ? "border-transparent bg-gradient-to-r from-grape to-sky text-white shadow-glow"
-                          : "border-white/80 bg-white/60 text-ink hover:bg-white"
+                          ? "border-transparent bg-cta text-on-cta shadow-glow"
+                          : "border-white/60 bg-white/60 text-ink hover:bg-white/90"
                       } ${
                         outOfStock
                           ? "cursor-not-allowed opacity-40 line-through"

@@ -88,9 +88,9 @@ export default function ChatWidget() {
   } 
 
     return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-50 sm:right-5 flex flex-col items-end gap-3">
       {isOpen && (
-        <div className="glass-strong flex h-[32rem] max-h-[75vh] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden">
+        <div className="glass-strong flex h-[32rem] max-h-[calc(100dvh-7rem)] w-[22rem] max-w-[calc(100vw-2rem)] flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/60 px-4 py-3">
             <div>
@@ -122,7 +122,7 @@ export default function ChatWidget() {
                     <div
                       className={
                         isUser
-                          ? "whitespace-pre-line rounded-2xl rounded-br-sm bg-grape px-4 py-2 text-sm text-white"
+                          ? "whitespace-pre-line rounded-2xl rounded-br-sm bg-cta px-4 py-2 text-sm text-on-cta"
                           : "whitespace-pre-line rounded-2xl rounded-bl-sm bg-white/60 px-4 py-2 text-sm text-ink"
                       }
                     >
@@ -173,7 +173,7 @@ export default function ChatWidget() {
       {/* The round chat button */}
       <button
         onClick={() => setIsOpen((open) => !open)}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-grape text-2xl text-white shadow-glow transition hover:scale-105"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-cta text-2xl text-on-cta shadow-glow transition hover:scale-105"
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? "✕" : "💬"}

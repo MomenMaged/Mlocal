@@ -46,7 +46,7 @@ export default function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-12">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
           <Link to="/" className="font-display text-3xl font-bold tracking-tight">

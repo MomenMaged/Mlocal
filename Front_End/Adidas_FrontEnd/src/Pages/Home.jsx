@@ -104,7 +104,7 @@ function Home() {
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
 
-          <div className="absolute inset-0 bg-linear-to-br from-black/75 via-black/45 to-grape/30" />
+          <div className="absolute inset-0 bg-linear-to-br from-black/75 via-black/45 to-grape/15" />
 
           <div className="relative z-10 px-4 py-8 sm:px-10 sm:py-12 lg:py-16 2xl:py-24">
             <div className="glass-strong max-w-2xl rounded-[2rem] p-6 sm:p-8 2xl:p-10">
@@ -333,7 +333,7 @@ function Home() {
                 Made for movement
               </p>
 
-              <h2 className="mx-auto mt-4 max-w-3xl text-4xl font-bold sm:text-5xl">
+              <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-bold sm:text-5xl">
                 Your next move starts here.
               </h2>
 

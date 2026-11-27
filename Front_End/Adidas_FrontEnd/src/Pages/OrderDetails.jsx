@@ -165,12 +165,12 @@ export default function OrderDetails() {
                     <img
                       src={item.images[0]}
                       alt={item.name}
-                      className="h-16 w-16 rounded-xl object-cover"
+                      className="h-16 w-16 shrink-0 rounded-xl object-cover"
                     />
                   )}
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold">{item.name}</h3>
+                    <h3 className="break-words font-semibold">{item.name}</h3>
 
                     <p className="mt-1 text-sm text-ink-soft">
                       {item.size ? `Size: ${item.size} · ` : ""}

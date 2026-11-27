@@ -169,31 +169,31 @@ export default function Profile() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
         {/* Sidebar */}
-        <aside className="glass h-fit p-3">
-          <p className="px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">
+        <aside className="glass h-fit p-2 md:sticky md:top-28 md:p-3">
+          <p className="hidden px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-ink-soft md:block">
             Account menu
           </p>
 
-          <nav className="space-y-1">
+          <nav className="no-scrollbar flex gap-1 overflow-x-auto md:block md:space-y-1">
             <Link
               to="/my-account"
-              className="flex rounded-2xl bg-gradient-to-r from-grape to-sky px-4 py-3 text-sm font-semibold text-white shadow-glow"
+              className="flex shrink-0 whitespace-nowrap rounded-2xl bg-cta px-4 py-3 text-sm font-semibold text-on-cta shadow-glow"
             >
               Profile information
             </Link>
 
             <Link
               to="/my-orders"
-              className="flex rounded-2xl px-4 py-3 text-sm font-medium text-ink-soft transition hover:bg-white/60 hover:text-ink"
+              className="flex shrink-0 whitespace-nowrap rounded-2xl px-4 py-3 text-sm font-medium text-ink-soft transition hover:bg-white/60 hover:text-ink"
             >
               My orders
             </Link>
 
             <Link
               to="/my-account/security"
-              className="flex rounded-2xl px-4 py-3 text-sm font-medium text-ink-soft transition hover:bg-white/60 hover:text-ink"
+              className="flex shrink-0 whitespace-nowrap rounded-2xl px-4 py-3 text-sm font-medium text-ink-soft transition hover:bg-white/60 hover:text-ink"
             >
               Security settings
             </Link>
@@ -201,7 +201,7 @@ export default function Profile() {
         </aside>
 
         {/* Profile content */}
-        <section className="glass-strong p-6 sm:p-8">
+        <section className="glass-strong p-5 sm:p-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold">Personal information</h2>

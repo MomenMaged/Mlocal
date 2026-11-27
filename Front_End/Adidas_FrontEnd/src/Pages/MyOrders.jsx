@@ -138,14 +138,14 @@ export default function MyOrders() {
       </div>
 
       {/* Order filters */}
-      <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
+      <div className="no-scrollbar -mx-4 mb-8 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
         {filters.map((filter) => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${
               activeFilter === filter
-                ? "bg-gradient-to-r from-grape to-sky text-white shadow-glow"
+                ? "bg-cta text-on-cta shadow-glow"
                 : "border border-white/70 bg-white/50  hover:bg-white/10 hover:text-ink"
             }`}
           >
@@ -225,12 +225,12 @@ export default function MyOrders() {
                         <img
                           src={item.images[0]}
                           alt={item.name}
-                          className="h-16 w-16 rounded-xl object-cover"
+                          className="h-16 w-16 shrink-0 rounded-xl object-cover"
                         />
                       )}
 
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold">{item.name}</h3>
+                        <h3 className="break-words font-semibold">{item.name}</h3>
 
                         <p className="mt-1 text-sm text-ink-soft">
                           {item.size ? `Size: ${item.size} · ` : ""}
@@ -264,7 +264,7 @@ export default function MyOrders() {
 
                   <Link
                     to={`/my-orders/${order._id}`}
-                    className="btn-glass"
+                    className="btn-glass w-full sm:w-auto"
                   >
                     View order
                   </Link>

@@ -123,12 +123,12 @@ export default function Checkout() {
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[minmax(0,1fr)_340px]">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <section className="glass p-6">
+          <section className="glass p-5 sm:p-6">
             <h2 className="mb-5 text-xl font-bold">Shipping address</h2>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               {[
                 { name: "fullName", label: "Full name" },
                 { name: "phone", label: "Phone number" },
@@ -144,6 +144,7 @@ export default function Checkout() {
 
                   <input
                     name={field.name}
+                    type={field.name === "phone" ? "tel" : "text"}
                     value={shippingAddress[field.name]}
                     onChange={handleAddressChange}
                     required
@@ -161,7 +162,7 @@ export default function Checkout() {
             </div>
           </section>
 
-          <section className="glass p-6">
+          <section className="glass p-5 sm:p-6">
             <h2 className="mb-5 text-xl font-bold">Payment method</h2>
 
             <div className="space-y-3">
@@ -206,7 +207,7 @@ export default function Checkout() {
           </button>
         </form>
 
-        <aside className="glass-strong h-fit p-6">
+        <aside className="glass-strong order-first h-fit p-5 sm:p-6 md:order-none md:sticky md:top-28">
           <h2 className="text-xl font-bold">Order summary</h2>
 
           <div className="mt-5 space-y-3">
@@ -223,12 +224,12 @@ export default function Checkout() {
                   key={String(id)}
                   className="flex justify-between gap-4 text-sm"
                 >
-                  <span className="text-ink-soft">
+                  <span className="min-w-0 break-words text-ink-soft">
                     {product?.name ?? "Product"}
                     {item.size ? ` — Size ${item.size}` : ""} × {item.quantity}
                   </span>
 
-                  <span className="font-semibold">
+                  <span className="shrink-0 font-semibold">
                     EGP{" "}
                     {(
                       Number(product?.price ?? item.price ?? 0) *

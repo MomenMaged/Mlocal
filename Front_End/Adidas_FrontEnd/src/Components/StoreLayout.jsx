@@ -7,7 +7,7 @@ export default function StoreLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
       <Navbar />
       {/* key = pathname: React re-mounts this wrapper on every page change,
           which replays the .page-enter animation (fade up + un-blur). */}

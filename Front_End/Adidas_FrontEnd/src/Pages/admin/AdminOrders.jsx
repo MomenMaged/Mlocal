@@ -191,7 +191,7 @@ export default function AdminOrders() {
           <div className="p-10 text-center text-ink-soft">No orders found.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-left text-sm">
+            <table className="table-stack w-full min-w-[900px] text-left text-sm">
               <thead className="bg-white/40 text-xs uppercase tracking-wider text-ink-soft">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Order ID</th>
@@ -214,7 +214,7 @@ export default function AdminOrders() {
                       #{order._id.slice(-8).toUpperCase()}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Customer" className="px-6 py-4">
                       <p className="font-medium">
                         {order.user?.name || "Deleted user"}
                       </p>
@@ -223,15 +223,15 @@ export default function AdminOrders() {
                       </p>
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-ink-soft">
+                    <td data-label="Date" className="whitespace-nowrap px-6 py-4 text-ink-soft">
                       {formatDate(order.createdAt)}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 font-medium">
+                    <td data-label="Total" className="whitespace-nowrap px-6 py-4 font-medium">
                       {formatPrice(order.totalAmount)}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Payment" className="px-6 py-4">
                       <span
                         className={`chip ${
                           paymentChip[order.paymentStatus] || "chip-unpaid"
@@ -241,7 +241,7 @@ export default function AdminOrders() {
                       </span>
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Status" className="px-6 py-4">
                       <span
                         className={`chip ${
                           statusChip[order.status] || "chip-unpaid"

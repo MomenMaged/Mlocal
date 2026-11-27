@@ -213,7 +213,7 @@ export default function AdminProducts() {
       {/* Products Table */}
       <div className="glass overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] text-left text-sm">
+          <table className="table-stack w-full min-w-[900px] text-left text-sm">
             <thead className="bg-white/40 text-xs uppercase tracking-wider text-ink-soft">
               <tr>
                 <th className="px-6 py-4 font-semibold">Product</th>
@@ -276,15 +276,15 @@ export default function AdminProducts() {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4 text-ink-soft">
+                      <td data-label="Category" className="px-6 py-4 text-ink-soft">
                         {product.categories?.name || "Uncategorized"}
                       </td>
 
-                      <td className="px-6 py-4 font-medium">
+                      <td data-label="Price" className="px-6 py-4 font-medium">
                         EGP {Number(product.price).toLocaleString()}
                       </td>
 
-                      <td className="px-6 py-4 text-ink-soft">
+                      <td data-label="Quantity" className="px-6 py-4 text-ink-soft">
                         {hasSizes ? (
                           <div className="space-y-1">
                             <p className="font-medium text-ink">
@@ -307,7 +307,7 @@ export default function AdminProducts() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td data-label="Stock" className="px-6 py-4">
                         <span className={`chip ${stock.className}`}>
                           {stock.label}
                         </span>

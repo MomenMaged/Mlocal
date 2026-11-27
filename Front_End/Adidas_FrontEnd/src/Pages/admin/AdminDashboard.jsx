@@ -170,7 +170,7 @@ export default function AdminDashboard() {
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px] text-left text-sm">
+            <table className="table-stack w-full min-w-[700px] text-left text-sm">
               <thead className="bg-white/40 text-xs uppercase tracking-wider text-ink-soft">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Order ID</th>
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
                       #{order._id.slice(-6).toUpperCase()}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Customer" className="px-6 py-4">
                       <p className="font-medium">
                         {order.user?.name || "Unknown"}
                       </p>
@@ -198,19 +198,19 @@ export default function AdminDashboard() {
                       </p>
                     </td>
 
-                    <td className="px-6 py-4 text-ink-soft">
+                    <td data-label="Date" className="px-6 py-4 text-ink-soft">
                       {formatDate(order.createdAt)}
                     </td>
 
-                    <td className="px-6 py-4 font-medium">
+                    <td data-label="Total" className="px-6 py-4 font-medium">
                       {formatCurrency(order.totalAmount)}
                     </td>
 
-                    <td className="px-6 py-4 capitalize text-ink-soft">
+                    <td data-label="Payment" className="px-6 py-4 capitalize text-ink-soft">
                       {order.paymentStatus}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td data-label="Status" className="px-6 py-4">
                       <span
                         className={`chip ${
                           statusChip[order.status] || "chip-unpaid"

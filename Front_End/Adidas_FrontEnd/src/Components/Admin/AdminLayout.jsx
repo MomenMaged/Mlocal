@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 
 const navigation = [
   { name: "Dashboard", path: "/admin", icon: "▦", end: true },
@@ -22,12 +23,12 @@ export default function AdminLayout() {
   const linkClasses = ({ isActive }) =>
     `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
       isActive
-        ? "bg-gradient-to-r from-grape to-sky text-white shadow-glow"
+        ? "bg-cta text-on-cta shadow-glow"
         : "text-ink-soft hover:bg-white/60 hover:text-ink"
     }`;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       {/* Mobile header */}
       <header className="glass sticky top-3 z-50 mx-3 flex items-center justify-between px-4 py-3 lg:hidden">
         <span className="font-display text-lg font-bold tracking-tight">
@@ -37,33 +38,41 @@ export default function AdminLayout() {
           </span>
         </span>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="rounded-full p-2 text-xl transition hover:bg-white/60"
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? "✕" : "☰"}
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="rounded-full p-2 text-xl transition hover:bg-white/60"
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </header>
 
-      <div className="flex min-h-screen">
+      <div className="flex min-h-dvh">
         {/* Sidebar */}
         <aside
-          className={`glass-strong fixed inset-y-3 left-3 z-40 flex w-64 flex-col rounded-glass-lg transition-transform duration-300 lg:sticky lg:top-3 lg:ml-3 lg:h-[calc(100vh-1.5rem)] lg:translate-x-0 ${
+          className={`glass-strong fixed inset-y-3 left-3 z-40 flex w-64 flex-col rounded-glass-lg transition-transform duration-300 lg:sticky lg:top-3 lg:ml-3 lg:h-[calc(100dvh-1.5rem)] lg:translate-x-0 ${
             menuOpen ? "translate-x-0" : "-translate-x-[110%]"
           }`}
         >
-          <div className="border-b border-white/60 px-6 py-7">
-            <h1 className="font-display text-xl font-bold tracking-tight">
-              <span className="text-gradient">MLocal</span>
-              <span>.</span>
-            </h1>
+          <div className="flex items-start justify-between gap-2 border-b border-white/60 px-6 py-7">
+            <div>
+              <h1 className="font-display text-xl font-bold tracking-tight">
+                <span className="text-gradient">MLocal</span>
+                <span>.</span>
+              </h1>
 
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-ink-soft">
-              Admin panel
-            </p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-ink-soft">
+                Admin panel
+              </p>
+            </div>
+
+            <ThemeToggle className="-mr-2 hidden lg:grid" />
           </div>
 
           <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-6">
