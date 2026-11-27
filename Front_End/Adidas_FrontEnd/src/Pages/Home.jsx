@@ -96,15 +96,15 @@ function Home() {
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-br from-ink/85 via-ink/55 to-grape/50" />
+          <div className="absolute inset-0 bg-linear-to-br from-black/75 via-black/45 to-grape/30" />
 
-          <div className="relative z-10 px-4 py-10 sm:px-10 sm:py-16 lg:py-24">
-            <div className="glass-strong max-w-2xl rounded-[2rem] p-7 sm:p-10">
+          <div className="relative z-10 px-4 py-8 sm:px-10 sm:py-12 lg:py-16 2xl:py-24">
+            <div className="glass-strong max-w-2xl rounded-[2rem] p-6 sm:p-8 2xl:p-10">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-grape">
                 New season. New goals.
               </p>
 
-              <h1 className="mt-4 font-display text-4xl font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+              <h1 className="mt-4 font-display text-4xl font-bold leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl 2xl:text-7xl">
                 IMPOSSIBLE
                 <br />
                 <span className="text-gradient">IS NOTHING.</span>
@@ -146,7 +146,7 @@ function Home() {
       </section>
 
       {/* Category cards */}
-      <section className="mx-auto max-w-[1600px] px-4 py-12 sm:px-6 sm:py-16">
+      <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 lg:py-14">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-grape">
@@ -177,7 +177,7 @@ function Home() {
                     ? `/products?category=${category._id}`
                     : "/products"
                 }
-                className="group relative h-[340px] overflow-hidden rounded-[1.75rem] border border-white/60 shadow-glass sm:h-[400px]"
+                className="group relative h-64 overflow-hidden rounded-[1.75rem] border border-white/60 shadow-glass sm:h-72 2xl:h-96"
               >
                 <img
                   src={
@@ -189,7 +189,7 @@ function Home() {
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <div className="glass-strong rounded-2xl p-4">
@@ -246,7 +246,7 @@ function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
           {products.map((product, index) => (
             <Link
               key={product._id || product.id}
@@ -303,7 +303,7 @@ function Home() {
       {/* Brand message */}
       <section className="px-4 pb-4 sm:px-6">
         <div className="mx-auto max-w-[1600px]">
-          <div className="glass-strong relative overflow-hidden rounded-[2rem] px-6 py-16 text-center sm:py-20">
+          <div className="glass-strong relative overflow-hidden rounded-[2rem] px-6 py-12 text-center sm:py-16">
             <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-grape/25 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-20 -right-10 h-64 w-64 rounded-full bg-aqua/25 blur-3xl" />
 

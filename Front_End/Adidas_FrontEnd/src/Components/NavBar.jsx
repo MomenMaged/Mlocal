@@ -2,6 +2,7 @@ import { useState , useEffect, useRef} from "react";
 import { Link, useNavigate , useLocation} from "react-router-dom";
 import { useAuth } from "../context/useAuth.jsx";
 import { useCart } from "../context/useCart.js";
+import MobileMenu from "./MobileMenu.jsx";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,6 +44,16 @@ useEffect(() => {
   };
 }, [menuOpen, searchOpen]);
 
+  // Stop the page behind the full-screen menu from scrolling while it is open
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menuOpen]);
+
   async function handleLogout() {
     await logout();
     setMenuOpen(false);
@@ -60,20 +71,21 @@ useEffect(() => {
   }
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header ref={headerRef} className="sticky top-0 z-60 px-3 pt-3 sm:px-5 sm:pt-4">
       <div className="mx-auto max-w-[1600px]">
         <div className="glass-nav overflow-hidden">
-          <div className="flex h-9 items-center justify-center rounded-t-[1.3rem] bg-gradient-to-r from-[#5b21b6] via-[#1d4ed8] to-[#0e7490] px-4 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white">
+          <div className="flex h-8 items-center justify-center rounded-t-[1.3rem] bg-linear-to-r from-grape via-aqua to-[#bf5af2] px-4 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-white">
             Free shipping over 1000 EGP
           </div>
 
-          <nav className="relative flex h-16 items-center justify-between gap-3 px-3 sm:px-5">
+          <nav className="relative flex h-14 items-center sm:h-16 justify-between gap-3 px-3 sm:px-5">
             <div className="flex min-w-0 items-center gap-1 sm:gap-2">
               <button
                 type="button"
                 className="rounded-full p-2 transition hover:bg-white/60 md:hidden"
                 aria-label="Toggle navigation menu"
                 aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
                 onClick={() => setMenuOpen((open) => !open)}
               >
                 <svg
@@ -213,7 +225,7 @@ useEffect(() => {
         </div>
 
         {searchOpen && (
-          <form onSubmit={handleSearch} className="glass mt-3 flex gap-2 p-2">
+          <form onSubmit={handleSearch} className="glass pop-in mt-3 flex gap-2 p-2">
             <input
               name="search"
               autoFocus
@@ -230,73 +242,14 @@ useEffect(() => {
           </form>
         )}
 
-        {menuOpen && (
-          <div className="glass mt-3 grid gap-1 p-3 md:hidden">
-            <Link
-              to="/products"
-              className="nav-link w-full"
-              onClick={() => setMenuOpen(false)}
-            >
-              Shop
-            </Link>
-
-            <Link
-              to="/my-orders"
-              className="nav-link w-full"
-              onClick={() => setMenuOpen(false)}
-            >
-              My orders
-            </Link>
-
-            <Link
-              to="/my-account"
-              className="nav-link w-full"
-              onClick={() => setMenuOpen(false)}
-            >
-              My account
-            </Link>
-
-            {user?.role === "admin" && (
-              <Link
-                to="/admin"
-                className="nav-link w-full"
-                onClick={() => setMenuOpen(false)}
-              >
-                Admin
-              </Link>
-            )}
-
-            <div className="mt-2 flex gap-2">
-              {user ? (
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="btn-primary flex-1 py-2 text-[11px]"
-                >
-                  Log out
-                </button>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="btn-glass flex-1 py-2 text-[11px]"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Log in
-                  </Link>
-
-                  <Link
-                    to="/signup"
-                    className="btn-primary flex-1 py-2 text-[11px]"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Sign up
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
+        <MobileMenu
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          user={user}
+          itemCount={itemCount}
+          onLogout={handleLogout}
+          onSearch={handleSearch}
+        />
       </div>
     </header>
   );

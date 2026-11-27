@@ -86,7 +86,7 @@ function ProductCard({ product, index }) {
         </span>
       </div>
 
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
           {product.categories?.name || product.category?.name || "Sportswear"}
         </p>
@@ -114,7 +114,7 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
-  const [limit] = useState(8);
+  const [limit] = useState(20); // divisible by 2, 4 and 5 columns, so rows stay full
   const [pagination, setPagination] = useState(null);
   const [sortPrice, setSortPrice] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -209,12 +209,12 @@ function Products() {
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-10">
       {/* Page heading */}
-      <section className="glass-strong rounded-glass-lg px-6 py-10 sm:px-10 sm:py-12">
+      <section className="glass-strong rounded-glass-lg px-6 py-8 sm:px-10 sm:py-10">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-grape">
           Find your next favourite
         </p>
 
-        <h1 className="mt-3 text-4xl font-bold sm:text-6xl">All products</h1>
+        <h1 className="mt-3 text-3xl font-bold sm:text-5xl">All products</h1>
 
         <p className="mt-4 max-w-xl text-ink-soft">
           Explore our sportswear, footwear, and accessories.
@@ -291,7 +291,7 @@ function Products() {
           </div>
         </div>
       ) : products.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
           {products.map((product, index) => (
             <ProductCard
               key={product._id || product.id}

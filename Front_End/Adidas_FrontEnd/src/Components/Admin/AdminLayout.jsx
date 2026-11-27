@@ -112,7 +112,7 @@ export default function AdminLayout() {
             type="button"
             aria-label="Close navigation"
             onClick={() => setMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-ink/30 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"
           />
         )}
 

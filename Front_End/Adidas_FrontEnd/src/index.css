@@ -1,23 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Deep ink and smoked glass */
-  --color-ink: #f3f6fb;
-  --color-ink-soft: #a7b3c7;
-  --color-paper: #080d18;
+  /* iOS dark-mode labels and background */
+  --color-ink: #f5f5f7;
+  --color-ink-soft: #98989d;
+  --color-paper: #000000;
 
-  /* Accents */
-  --color-grape: #8b5cf6;
-  --color-sky: #38bdf8;
-  --color-aqua: #2dd4bf;
-  --color-zest: #bef264;
-  --color-sun: #fbbf24;
-  --color-mint: #34d399;
-  --color-danger: #fb7185;
+  /* iOS system colors (dark appearance). Token names are kept so the pages keep working:
+     grape = systemBlue (the tint), sky = systemTeal, aqua = systemIndigo */
+  --color-grape: #0a84ff;
+  --color-sky: #64d2ff;
+  --color-aqua: #5e5ce6;
+  --color-zest: #30d158;
+  --color-sun: #ff9f0a;
+  --color-mint: #30d158;
+  --color-danger: #ff453a;
 
-  /* Type */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Type: San Francisco on Apple devices, Inter everywhere else */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion: iOS-like springs */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Shape */
   --radius-glass: 1.5rem;
@@ -26,7 +31,7 @@
   /* Depth */
   --shadow-glass: 0 18px 50px -12px rgb(0 0 0 / 0.48), inset 0 1px 0 rgb(255 255 255 / 0.14);
   --shadow-float: 0 30px 75px -24px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.18);
-  --shadow-glow: 0 12px 36px -12px rgb(139 92 246 / 0.52);
+  --shadow-glow: 0 12px 36px -12px rgb(10 132 255 / 0.55);
 }
 
 @layer base {
@@ -34,6 +39,23 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     color-scheme: dark;
+    font-size: 16px;
+  }
+
+  /* Laptops: Tailwind sizes are in rem, so a slightly smaller root font
+     scales the whole layout (text, spacing, radii) down together.
+     1280px wide ≈ 14px, 1440px ≈ 14.6px, 1920px+ = 16px. */
+  @media (min-width: 1024px) {
+    html {
+      font-size: clamp(14px, 0.25vw + 11px, 16px);
+    }
+  }
+
+  /* Short laptop screens (e.g. 1366×768, or 1080p at 125% Windows scaling) */
+  @media (min-width: 1024px) and (max-height: 820px) {
+    html {
+      font-size: 14px;
+    }
   }
 
   body {
@@ -55,7 +77,7 @@
   }
 
   ::selection {
-    background: rgb(139 92 246 / 0.35);
+    background: rgb(10 132 255 / 0.35);
   }
 
   :focus-visible {
@@ -85,49 +107,69 @@
 }
 
 @layer components {
-  /* ---------- Glass surfaces ---------- */
-  .glass {
-    border-radius: var(--radius-glass);
-    border: 1px solid rgb(255 255 255 / 0.14);
-    background: rgb(17 25 43 / 0.62);
-    box-shadow: var(--shadow-glass);
-    -webkit-backdrop-filter: blur(22px) saturate(165%);
-    backdrop-filter: blur(22px) saturate(165%);
-  }
-
-  .glass-strong {
-    border-radius: var(--radius-glass);
-    border: 1px solid rgb(255 255 255 / 0.2);
-    background: rgb(17 25 43 / 0.82);
-    box-shadow: var(--shadow-glass);
-    -webkit-backdrop-filter: blur(22px) saturate(165%);
-    backdrop-filter: blur(22px) saturate(165%);
-  }
-
-  .glass-subtle {
-    border-radius: var(--radius-glass);
-    border: 1px solid rgb(255 255 255 / 0.1);
-    background: rgb(17 25 43 / 0.38);
-    -webkit-backdrop-filter: blur(18px) saturate(150%);
-    backdrop-filter: blur(18px) saturate(150%);
-  }
-
+  /* ---------- Liquid glass surfaces ---------- */
+  .glass,
+  .glass-strong,
+  .glass-subtle,
   .glass-nav {
-    border-radius: 1.35rem;
-    border: 1px solid rgb(255 255 255 / 0.18);
-    background: rgb(17 25 43 / 0.78);
-    box-shadow: 0 20px 50px -26px rgb(0 0 0 / 0.62);
-    -webkit-backdrop-filter: blur(26px) saturate(180%);
-    backdrop-filter: blur(26px) saturate(180%);
+    position: relative;
+    border-radius: var(--glass-radius, var(--radius-glass));
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background:
+      linear-gradient(135deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.02) 45%, rgb(255 255 255 / 0.06)),
+      var(--glass-bg);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.32),
+      inset 0 -1px 0 rgb(255 255 255 / 0.05),
+      inset 0 0 24px rgb(255 255 255 / 0.04),
+      0 22px 50px -22px rgb(0 0 0 / 0.6);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%) brightness(1.08);
+    backdrop-filter: blur(var(--glass-blur)) saturate(190%) brightness(1.08);
   }
+
+  /* Specular rim: a 1px gradient ring, brightest at the top-left */
+  .glass::before,
+  .glass-strong::before,
+  .glass-subtle::before,
+  .glass-nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      rgb(255 255 255 / 0.55),
+      rgb(255 255 255 / 0.06) 35%,
+      rgb(255 255 255 / 0) 60%,
+      rgb(255 255 255 / 0.22)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Tint = iOS dark "material" gray (28 28 30) */
+  .glass        { --glass-bg: rgb(28 28 30 / 0.42); --glass-blur: 24px; }
+  .glass-strong { --glass-bg: rgb(28 28 30 / 0.7);  --glass-blur: 28px; }
+  .glass-subtle { --glass-bg: rgb(28 28 30 / 0.24); --glass-blur: 18px; }
+  .glass-nav    { --glass-bg: rgb(28 28 30 / 0.52); --glass-blur: 30px; --glass-radius: 1.35rem; }
 
   .card-hover {
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+    transition: transform 0.5s var(--ease-spring), box-shadow 0.35s ease;
   }
 
   .card-hover:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.01);
     box-shadow: var(--shadow-float);
+  }
+
+  /* Press-in feedback, like tapping a card on iOS */
+  .card-hover:active {
+    transform: scale(0.98);
+    transition-duration: 0.15s;
   }
 
   /* ---------- Buttons ---------- */
@@ -137,30 +179,38 @@
     justify-content: center;
     gap: 0.5rem;
     border-radius: 9999px;
-    padding: 0.85rem 1.6rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: #fff;
-    background-image: linear-gradient(110deg, #6d28d9, #8b5cf6 55%, #0f766e);
-    background-size: 160% 100%;
-    box-shadow: var(--shadow-glow);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background-position 0.5s ease;
+    /* iOS system blue with a soft glass highlight on top */
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 55%),
+      var(--color-grape);
+    box-shadow: var(--shadow-glow), inset 0 1px 0 rgb(255 255 255 / 0.35);
+    transition: transform 0.45s var(--ease-spring), box-shadow 0.3s ease, filter 0.2s ease;
   }
 
   .btn-primary:hover {
-    transform: translateY(-2px);
-    background-position: 100% 0;
-    box-shadow: 0 18px 46px -12px rgb(29 78 216 / 0.45);
+    filter: brightness(1.1);
+    transform: translateY(-1px) scale(1.02);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.95);
+    filter: brightness(0.95);
+    transition-duration: 0.12s;
   }
 
   .btn-primary:disabled {
-    opacity: 0.55;
+    opacity: 0.45;
+    filter: none;
     transform: none;
     box-shadow: none;
   }
 
+  /* Liquid glass pill button */
   .btn-glass {
     display: inline-flex;
     align-items: center;
@@ -168,25 +218,30 @@
     gap: 0.5rem;
     border-radius: 9999px;
     padding: 0.8rem 1.5rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--color-ink);
-    background: rgb(255 255 255 / 0.1);
-    border: 1px solid rgb(255 255 255 / 0.18);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    transition: background 0.2s ease, transform 0.2s ease;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06));
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    transition: background 0.25s ease, transform 0.45s var(--ease-spring);
   }
 
   .btn-glass:hover {
-    background: rgb(255 255 255 / 0.16);
-    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.1));
+    transform: translateY(-1px) scale(1.02);
+  }
+
+  .btn-glass:active {
+    transform: scale(0.95);
+    transition-duration: 0.12s;
   }
 
   .btn-glass:disabled {
-    opacity: 0.5;
+    opacity: 0.45;
     transform: none;
   }
 
@@ -195,95 +250,95 @@
     align-items: center;
     border-radius: 9999px;
     padding: 0.5rem 0.9rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
     color: var(--color-ink);
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.4s var(--ease-spring);
   }
 
   .nav-link:hover {
     background: rgb(255 255 255 / 0.1);
   }
 
-  /* ---------- Fields ---------- */
+  .nav-link:active {
+    transform: scale(0.94);
+    transition-duration: 0.12s;
+  }
+
+  /* ---------- Fields (iOS "tertiary fill" inputs) ---------- */
   .field {
     width: 100%;
-    border-radius: 1rem;
-    border: 1px solid rgb(255 255 255 / 0.18);
-    background: rgb(5 10 22 / 0.48);
+    border-radius: 0.9rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(118 118 128 / 0.24);
     padding: 0.8rem 1rem;
     color: var(--color-ink);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
   }
 
   .field::placeholder {
-    color: rgb(167 179 199 / 0.7);
+    color: rgb(235 235 245 / 0.35);
   }
 
   .field:focus {
     outline: none;
-    background: rgb(5 10 22 / 0.72);
-    border-color: rgb(139 92 246 / 0.7);
-    box-shadow: 0 0 0 4px rgb(139 92 246 / 0.18);
+    background: rgb(118 118 128 / 0.32);
+    border-color: rgb(10 132 255 / 0.8);
+    box-shadow: 0 0 0 4px rgb(10 132 255 / 0.22);
   }
 
-  /* ---------- Chips ---------- */
+  /* ---------- Chips (iOS system colors) ---------- */
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     border-radius: 9999px;
     padding: 0.3rem 0.7rem;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     white-space: nowrap;
   }
 
   .chip-pending {
-    background: rgb(245 158 11 / 0.16);
-    color: #fcd34d;
+    background: rgb(255 159 10 / 0.18);
+    color: #ffb340;
   }
 
-  .chip-processing {
-    background: rgb(29 78 216 / 0.12);
-    color: #93c5fd;
-  }
-
+  .chip-processing,
   .chip-shipped {
-    background: rgb(29 78 216 / 0.12);
-    color: #93c5fd;
+    background: rgb(10 132 255 / 0.18);
+    color: #64d2ff;
   }
 
   .chip-delivered,
   .chip-paid,
   .chip-confirmed {
-    background: rgb(16 185 129 / 0.14);
-    color: #6ee7b7;
+    background: rgb(48 209 88 / 0.18);
+    color: #30d158;
   }
 
   .chip-cancelled,
   .chip-failed {
-    background: rgb(190 18 60 / 0.14);
-    color: #fda4af;
+    background: rgb(255 69 58 / 0.18);
+    color: #ff6961;
   }
 
   .chip-unpaid {
-    background: rgb(65 72 102 / 0.14);
-    color: #cbd5e1;
+    background: rgb(118 118 128 / 0.24);
+    color: #d1d1d6;
   }
 
   .chip-refunded {
-    background: rgb(15 118 110 / 0.12);
-    color: #5eead4;
+    background: rgb(94 92 230 / 0.2);
+    color: #a5a3ff;
   }
 
   /* ---------- Accents ---------- */
   .text-gradient {
-    background-image: linear-gradient(105deg, #c4b5fd, #8b5cf6 50%, #5eead4);
+    background-image: linear-gradient(105deg, #64d2ff, #0a84ff 45%, #bf5af2);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -298,14 +353,276 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.45) 48%, transparent 62%);
+    background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.35) 48%, transparent 62%);
     transform: translateX(-120%);
-    transition: transform 0.7s ease;
+    transition: transform 0.8s var(--ease-out-soft);
     pointer-events: none;
   }
 
   .sheen:hover::after {
     transform: translateX(120%);
+  }
+
+  /* ---------- Motion ---------- */
+
+  /* Each page fades up and un-blurs when you navigate to it (see StoreLayout).
+     "backwards" fill = styles apply only while animating, so after it ends the
+     wrapper has no transform/filter and position: fixed children work normally. */
+  .page-enter {
+    animation: page-in 0.6s var(--ease-out-soft) backwards;
+  }
+
+  /* Dropdowns / menus spring open from the top, like iOS menus */
+  .pop-in {
+    transform-origin: top center;
+    animation: pop-in 0.5s var(--ease-spring) backwards;
+  }
+
+  /* Stagger children of a .stagger container (e.g. menu items) */
+  .stagger > * {
+    animation: rise-in 0.45s var(--ease-out-soft) backwards;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0.03s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.06s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.09s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.12s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.15s; }
+  .stagger > *:nth-child(6) { animation-delay: 0.18s; }
+  .stagger > *:nth-child(7) { animation-delay: 0.21s; }
+
+  /* ---------- Full-screen mobile menu (iOS Settings style) ---------- */
+  /* Always mounted; data-open toggles it so it animates both open AND closed.
+     visibility is delayed on close so the fade-out can finish first. */
+  .mobile-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    background:
+      radial-gradient(120% 55% at 0% 0%, rgb(10 132 255 / 0.25), transparent 60%),
+      radial-gradient(100% 45% at 100% 100%, rgb(191 90 242 / 0.2), transparent 60%),
+      rgb(0 0 0 / 0.66);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.03);
+    transition:
+      opacity 0.3s ease,
+      transform 0.45s var(--ease-out-soft),
+      visibility 0s linear 0.45s;
+  }
+
+  .mobile-sheet[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.3s ease,
+      transform 0.5s var(--ease-out-soft),
+      visibility 0s;
+  }
+
+  /* Content blocks slide up one after another (index set inline as --i) */
+  .mobile-sheet .menu-item {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .mobile-sheet[data-open="true"] .menu-item {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.45s ease calc(0.05s + var(--i, 0) * 0.045s),
+      transform 0.6s var(--ease-spring) calc(0.05s + var(--i, 0) * 0.045s);
+  }
+
+  .menu-search {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 2.9rem;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    background: rgb(118 118 128 / 0.24);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    transition: box-shadow 0.25s ease, border-color 0.2s ease;
+  }
+
+  .menu-search:focus-within {
+    border-color: rgb(10 132 255 / 0.8);
+    box-shadow: 0 0 0 4px rgb(10 132 255 / 0.22);
+  }
+
+  /* Promo banner card */
+  .menu-promo {
+    position: relative;
+    display: block;
+    height: 9.5rem;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.2);
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  .menu-promo:active {
+    transform: scale(0.98);
+    transition-duration: 0.12s;
+  }
+
+  /* Small liquid-glass pill used on top of photos */
+  .glass-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.45rem 0.95rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.1));
+    border: 1px solid rgb(255 255 255 / 0.3);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    backdrop-filter: blur(14px) saturate(180%);
+  }
+
+  /* Category tile in the swipe row */
+  .menu-cat {
+    position: relative;
+    flex-shrink: 0;
+    width: 6.5rem;
+    height: 7.5rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: linear-gradient(135deg, rgb(10 132 255 / 0.35), rgb(191 90 242 / 0.3));
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  .menu-cat:active {
+    transform: scale(0.95);
+    transition-duration: 0.12s;
+  }
+
+  .menu-cat-label {
+    position: absolute;
+    left: 0.4rem;
+    right: 0.4rem;
+    bottom: 0.4rem;
+    overflow: hidden;
+    padding: 0.3rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: rgb(255 255 255 / 0.16);
+    border: 1px solid rgb(255 255 255 / 0.22);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(180%);
+  }
+
+  /* Quick action tile (Shop all / Cart / Orders / Account) */
+  .menu-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    aspect-ratio: 1;
+    border-radius: 1.25rem;
+    color: var(--color-ink);
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.04));
+    border: 1px solid rgb(255 255 255 / 0.12);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 12px 24px -16px rgb(0 0 0 / 0.7);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    transition: transform 0.4s var(--ease-spring), background 0.2s ease;
+  }
+
+  .menu-tile:active {
+    transform: scale(0.93);
+    background: rgb(255 255 255 / 0.16);
+    transition-duration: 0.12s;
+  }
+
+  .menu-badge {
+    position: absolute;
+    top: -0.45rem;
+    right: -0.7rem;
+    min-width: 1.2rem;
+    padding: 0.05rem 0.35rem;
+    border-radius: 9999px;
+    background: var(--color-danger);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.1rem;
+    text-align: center;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Scroll reveal: product cards (and anything with .reveal) slide up as they
+   enter the screen. Runs on the compositor (no JavaScript), so it stays smooth.
+   Uses the separate `translate`/`scale` properties so it doesn't fight the
+   hover `transform` on .card-hover. Browsers without support just show the cards. */
+@supports (animation-timeline: view()) {
+  .page-enter .card-hover,
+  .page-enter .reveal {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.99);
+    filter: blur(8px);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.94);
+    filter: blur(6px);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
   }
 }
 
@@ -315,7 +632,7 @@
   }
 
   .bg-white\/40 {
-    background-color: rgb(5 10 22 / 0.48);
+    background-color: rgb(118 118 128 / 0.24);
   }
 
   .bg-white\/60 {
@@ -335,70 +652,71 @@
   }
 }
 
-/* ---------- Aurora backdrop ---------- */
+/* ---------- Backdrop: iOS-wallpaper style color fields ----------
+   Liquid glass needs color behind it to blur and refract, so these are
+   brighter than before. */
 .aurora-layer {
   position: fixed;
   inset: 0;
   z-index: -10;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(160deg, #080d18 0%, #11182a 42%, #0a1221 100%);
+  background: linear-gradient(160deg, #000000 0%, #07070d 50%, #000000 100%);
 }
 
 .aurora-blob {
   position: absolute;
   border-radius: 9999px;
   filter: blur(80px);
-  opacity: 0.4;
   will-change: transform;
 }
 
 .aurora-a {
-  width: 46vw;
-  height: 46vw;
+  width: 50vw;
+  height: 50vw;
   min-width: 320px;
   min-height: 320px;
-  left: -10vw;
-  top: -12vh;
-  background: radial-gradient(circle at 30% 30%, #8b5cf6, #4c1d95 60%, transparent 72%);
+  left: -12vw;
+  top: -14vh;
+  background: radial-gradient(circle at 30% 30%, #0a84ff, #0040dd 58%, transparent 72%);
   animation: drift-a 26s ease-in-out infinite alternate;
-  opacity: 0.38;
+  opacity: 0.5;
 }
 
 .aurora-b {
-  width: 40vw;
-  height: 40vw;
+  width: 42vw;
+  height: 42vw;
   min-width: 280px;
   min-height: 280px;
-  right: -8vw;
-  top: 2vh;
-  background: radial-gradient(circle at 60% 40%, #2dd4bf, #115e59 60%, transparent 72%);
+  right: -10vw;
+  top: 4vh;
+  background: radial-gradient(circle at 60% 40%, #bf5af2, #ff375f 55%, transparent 72%);
   animation: drift-b 32s ease-in-out infinite alternate;
-  opacity: 0.3;
+  opacity: 0.38;
 }
 
 .aurora-c {
-  width: 44vw;
-  height: 44vw;
+  width: 46vw;
+  height: 46vw;
   min-width: 300px;
   min-height: 300px;
   left: 18vw;
-  bottom: -20vh;
-  background: radial-gradient(circle at 40% 60%, #38bdf8, #1e3a8a 62%, transparent 74%);
+  bottom: -22vh;
+  background: radial-gradient(circle at 40% 60%, #64d2ff, #5e5ce6 58%, transparent 74%);
   animation: drift-c 29s ease-in-out infinite alternate;
-  opacity: 0.34;
+  opacity: 0.42;
 }
 
 .aurora-veil {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgb(148 163 184 / 0.1), transparent 60%);
+  background: radial-gradient(ellipse at 50% 0%, rgb(255 255 255 / 0.06), transparent 60%);
 }
 
 .noise {
   position: absolute;
   inset: 0;
-  opacity: 0.06;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   background-size: 180px 180px;
 }
@@ -430,17 +748,21 @@
   }
 }
 
+/* ---------- Phones: lighter effects so scrolling stays at 60fps ---------- */
 @media (max-width: 640px) {
   .aurora-blob {
     filter: blur(56px);
-    opacity: 0.3;
   }
 
   .glass,
   .glass-strong,
   .glass-nav {
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
-    backdrop-filter: blur(16px) saturate(150%);
+    --glass-blur: 16px;
+  }
+
+  /* No hover on touch screens: avoid "stuck" lifted cards after a tap */
+  .card-hover:hover {
+    transform: none;
   }
 }
 
@@ -451,7 +773,7 @@
   .glass-nav,
   .field,
   .btn-glass {
-    background: rgb(17 25 43 / 0.96);
+    background: rgb(28 28 30 / 0.96);
   }
 }
 
@@ -460,7 +782,12 @@
     scroll-behavior: auto;
   }
 
-  .aurora-blob {
+  .aurora-blob,
+  .page-enter,
+  .pop-in,
+  .stagger > *,
+  .page-enter .card-hover,
+  .page-enter .reveal {
     animation: none !important;
   }
 
@@ -468,7 +795,20 @@
     display: none;
   }
 
-  .card-hover:hover {
+  .card-hover:hover,
+  .card-hover:active,
+  .btn-primary:hover,
+  .btn-primary:active,
+  .btn-glass:hover,
+  .btn-glass:active,
+  .nav-link:active {
     transform: none;
+  }
+
+  .mobile-sheet,
+  .mobile-sheet .menu-item {
+    transform: none !important;
+    transition-duration: 0.01s !important;
+    transition-delay: 0s !important;
   }
 }
