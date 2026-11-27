@@ -1,6 +1,10 @@
 import api from "../services/api.js";
+import { imageSrcSet, PRODUCT_CARD_SIZES } from "../utils/image.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=2000&q=85";
 
 function Home() {
   const categoryImages = [
@@ -91,7 +95,11 @@ function Home() {
       <section id="sports" className="px-3 pt-4 sm:px-5">
         <div className="relative mx-auto max-w-[1600px] overflow-hidden rounded-[2rem]">
           <img
-            src="https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=2000&q=90"
+            src={HERO_IMAGE}
+            srcSet={imageSrcSet(HERO_IMAGE, [640, 960, 1400, 2000])}
+            sizes="100vw"
+            fetchPriority="high"
+            decoding="async"
             alt="Athlete training in a sports facility"
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
@@ -184,8 +192,14 @@ function Home() {
                     category.image ||
                     categoryImages[index % categoryImages.length]
                   }
+                  srcSet={imageSrcSet(
+                    category.image ||
+                      categoryImages[index % categoryImages.length],
+                  )}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   alt={category.name}
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
 
@@ -260,6 +274,13 @@ function Home() {
                     product.image ||
                     productImages[index % productImages.length]
                   }
+                  srcSet={imageSrcSet(
+                    product.images?.[0] ||
+                      product.image ||
+                      productImages[index % productImages.length],
+                  )}
+                  sizes={PRODUCT_CARD_SIZES}
+                  decoding="async"
                   alt={product.name}
                   loading="lazy"
                   className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"

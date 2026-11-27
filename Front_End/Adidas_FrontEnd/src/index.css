@@ -748,21 +748,102 @@
   }
 }
 
-/* ---------- Phones: lighter effects so scrolling stays at 60fps ---------- */
-@media (max-width: 640px) {
-  .aurora-blob {
-    filter: blur(56px);
+/* ---------- Phones & touch devices: smooth 120Hz scrolling ----------
+   Why: a backdrop-filter has to re-blur whatever is behind it on EVERY frame
+   while the page scrolls. With ~20 glass cards + an animated background that
+   is far more GPU work than a phone can do in 8ms (one 120Hz frame).
+   So on phones we keep the real blur only on the sticky navbar, and give the
+   other glass surfaces a slightly more solid "frosted" fill. The background
+   behind them is already a soft blur, so they look almost the same. */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  /* Static background: one painted layer instead of 3 animated blurred blobs */
+  .aurora-blob,
+  .noise {
+    display: none;
   }
 
+  .aurora-layer {
+    background:
+      radial-gradient(75% 45% at 0% 0%, rgb(10 132 255 / 0.42), transparent 70%),
+      radial-gradient(65% 40% at 100% 18%, rgb(191 90 242 / 0.3), transparent 70%),
+      radial-gradient(80% 45% at 40% 100%, rgb(94 92 230 / 0.34), transparent 70%),
+      #000;
+  }
+
+  /* No live blur on scrolling content */
   .glass,
   .glass-strong,
+  .glass-subtle,
+  .btn-glass,
+  .field,
+  .glass-pill,
+  .menu-tile,
+  .menu-cat-label {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .glass        { --glass-bg: rgb(28 28 30 / 0.74); }
+  .glass-strong { --glass-bg: rgb(28 28 30 / 0.88); }
+  .glass-subtle { --glass-bg: rgb(28 28 30 / 0.52); }
+
+  .btn-glass {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06)),
+      rgb(44 44 46 / 0.7);
+  }
+
+  .glass-pill,
+  .menu-cat-label {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.06)),
+      rgb(30 30 32 / 0.6);
+  }
+
+  .menu-tile {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.05)), rgb(28 28 30 / 0.6);
+  }
+
+  /* The navbar is the only element that keeps a real (lighter) blur */
   .glass-nav {
-    --glass-blur: 16px;
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+  }
+
+  /* The full-screen menu blurs a page that is not moving, so it can stay */
+  .mobile-sheet {
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+  }
+
+  /* The gradient rim uses a CSS mask = an extra offscreen layer per card */
+  .glass::before,
+  .glass-strong::before,
+  .glass-subtle::before {
+    display: none;
+  }
+
+  /* Cards appear immediately instead of animating while you scroll */
+  .page-enter .card-hover,
+  .page-enter .reveal {
+    animation: none;
+  }
+
+  /* Page transition without the full-page blur filter (expensive on phones) */
+  .page-enter {
+    animation-name: page-in-lite;
   }
 
   /* No hover on touch screens: avoid "stuck" lifted cards after a tap */
   .card-hover:hover {
     transform: none;
+  }
+}
+
+@keyframes page-in-lite {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
 }
 

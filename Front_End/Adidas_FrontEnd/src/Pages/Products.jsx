@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import api from "../services/api.js";
+import { imageSrcSet, PRODUCT_CARD_SIZES } from "../utils/image.js";
 import { useDebounce } from "../hooks/useDeBounce.js";
 
 const productImages = [
@@ -51,8 +52,11 @@ function ProductCard({ product, index }) {
       <div className="relative overflow-hidden">
         <img
           src={displayImages[imageIndex]}
+          srcSet={imageSrcSet(displayImages[imageIndex])}
+          sizes={PRODUCT_CARD_SIZES}
           alt={product.name}
           loading="lazy"
+          decoding="async"
           className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
         />
 
